@@ -258,6 +258,21 @@ https://stackoverflow.com/questions/33014900/classes-without-constructor-in-f
 https://www.tutorialspoint.com/fsharp/fsharp_if_elif_else_statement.htm
 https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/conditional-expressions-if-then-else
 
+
+Linq
+https://dotnetcodr.com/2017/06/10/linq-statements-in-f/
+https://www.c-sharpcorner.com/UploadFile/mgold/writing-equivalent-linq-expressions-in-fsharp/
+https://tomasp.net/blog/2015/query-translation/
+https://markheath.net/post/linq-challenge-2-answers-fsharp
+https://tomasp.net/blog/dynamic-flinq.aspx/
+
+
+
+***
+
+https://www.codeconvert.ai/csharp-to-fsharp-converter
+https://github.com/willsam100/FShaper
+
 -----------
 
 *** Really good articles
