@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="ErrorHandling.fs" />
+    <Compile Include="Utility.fs" />
+    <None Include="README.md" />
     <Compile Include="TokenClass.fs" />
     <Compile Include="Token.fs" />
     <Compile Include="Program.fs" />

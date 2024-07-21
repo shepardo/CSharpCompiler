@@ -1,5 +1,34 @@
 
 
+
+
+
+*** Current Objectives
+
+- Aim for an engine of expression, for all C# 1.0 operators.
+- Add support for Parentesis in expressions.
+- Add unit tests for edge cases, including multiple operands.
+- add support for tracking location of errors
+- 
+
+
+```
+    type public INodeExpr() as this =        
+        do ()
+
+    type public OperandNode(token: Token) as this =
+        do()
+```
+
+
+- Add support for more operators (*,/,%,&,^,|,&&,||,==,!=, =, +=, etc, -, ++,--,new,sizeof), 
+https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/#operator-precedence
+
+
+
+*** References
+
+
 https://www.ecma-international.org/wp-content/uploads/ECMA-334_2nd_edition_december_2002.pdf
 
 https://github.com/antlr/grammars-v4/blob/master/csharp/CSharpParser.g4
@@ -10,7 +39,7 @@ https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-version-history
 https://dotnetcrunch.in/csharp-version-history-features/
 
 
-C# Version History
+*** C# Version History
 
 We have mentioned the features of the C# language and demonstrated the evolution of C# from version C#1.0 to C#10 (the current version at the time of writing this post).
 C# 1.0
@@ -131,3 +160,111 @@ C# 10.0 is supported on .NET 6. In C#10, the following features & enhancements a
 At the time of updating this blog post, C#10 is the latest available version, you can refer to Language Feature Status on the Roslyn (C#/VB Compiler) GitHub repo.
 
 To know these features in detail follow our post on C# 10 features.
+
+-------------------
+
+*** F# Notes
+
+
+https://fsharp.org/
+https://fsharp.org/specs/language-spec/4.1/FSharpSpec-4.1-latest.pdf
+
+
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/generics/
+
+Reference cells
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/reference-cells
+https://stackoverflow.com/questions/3221200/f-let-mutable-vs-ref
+https://lorgonblog.wordpress.com/2008/11/09/the-f-ref-type/
+
+https://stackoverflow.com/questions/1797241/while-or-tail-recursion-in-f-what-to-use-when
+https://stackoverflow.com/questions/3248091/f-tail-recursive-function-example
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/functions/recursive-functions-the-rec-keyword
+
+
+Optional Parameters
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/parameters-and-arguments
+https://stackoverflow.com/questions/30255271/how-to-set-default-argument-value-in-f
+https://www.markhneedham.com/blog/2010/04/12/f-the-defaultarg-function/
+https://github.com/MicrosoftDocs/visualfsharpdocs/blob/main/docs/conceptual/operators.defaultarg%5B't%5D-function-%5Bfsharp%5D.md
+https://www.fssnip.net/5z/title/Active-pattern-to-define-default-values
+https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-optionmodule.html
+
+https://stackoverflow.com/questions/30868572/is-there-default-parameter-in-f
+https://musingstudio.com/2015/03/18/how-to-write-optional-parameters-in-f-with-default-values/
+https://github.com/fsharp/fslang-suggestions/issues/1167
+https://github.com/dotnet/fsharp/issues/5701
+https://github.com/fsharp/fslang-design/blob/main/FSharp-4.1/FS-1027-complete-optional-defaultparametervalue.md
+
+
+Unit testing
+https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-fsharp-with-nunit
+
+
+Cast operators
+
+5 :> obj                 // upcast int to obj
+(upcast 5 : obj)         // same
+(box 5) :?> int          // downcast an obj to int (successfully)
+(downcast (box 5) : int) // same
+(box "5") :?> int        // downcast an obj to int (unsuccessfully)
+
+https://stackoverflow.com/questions/31616761/f-casting-operators
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/casting-and-conversions
+https://stackoverflow.com/questions/2480250/f-equivalent-of-the-c-sharp-typeofienumerable
+
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/modules
+https://www.luisquintanilla.me/posts/fsharpmodulesample
+https://www.reddit.com/r/fsharp/comments/u287kc/is_it_possible_to_divide_a_module_up_between_files/
+
+
+
+Empty types
+https://stackoverflow.com/questions/6668653/how-to-create-empty-class-in-f
+https://theburningmonk.com/2011/12/f-define-empty-class-struct-or-interface-types/
+
+Classes
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/classes
+https://stackoverflow.com/questions/38290418/f-difference-between-type-defined-with-and-without-parenthesis
+https://dev.to/shimmer/f-tip-1-don-t-use-classes-4c1j
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/interfaces
+https://fsharpforfunandprofit.com/posts/classes/
+
+
+DefaultValue
+https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-defaultvalueattribute.html
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/members/explicit-fields-the-val-keyword
+
+
+Abstract classes
+https://stackoverflow.com/questions/37632458/interfaces-and-abstract-classes-in-f
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/abstract-classes
+
+Interfaces
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/interfaces
+https://stackoverflow.com/questions/34719086/how-do-you-implement-an-interface-in-f
+https://fsharpforfunandprofit.com/posts/interfaces/
+https://www.tutorialspoint.com/fsharp/fsharp_interfaces.htm
+
+
+https://fsharpforfunandprofit.com/posts/classes/
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/interfaces
+https://dev.to/shimmer/f-tip-1-don-t-use-classes-4c1j
+https://fsharpforfunandprofit.com/posts/interfaces/
+https://fsharpforfunandprofit.com/posts/classes/
+
+https://stackoverflow.com/questions/33014900/classes-without-constructor-in-f
+
+https://www.tutorialspoint.com/fsharp/fsharp_if_elif_else_statement.htm
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/conditional-expressions-if-then-else
+
+-----------
+
+*** Really good articles
+
+https://softwareparticles.com/how-to-dynamically-execute-code-in-net/
+
+https://www.codeproject.com/Articles/121568/Dynamic-Type-Using-Reflection-Emit
+https://www.codeproject.com/Articles/13337/Introduction-to-Creating-Dynamic-Types-with-Reflec
+
+

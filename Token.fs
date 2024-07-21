@@ -1,6 +1,6 @@
 ﻿namespace CSharpCompiler
 
-// module main =
+//module Token =
 
     [<AllowNullLiteral>]
     type public Token(tokenClass : TokenClass, text : string) as this =
