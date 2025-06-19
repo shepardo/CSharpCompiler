@@ -51,11 +51,11 @@ module CodeGenTests =
             Assert.AreEqual(operand, inst.Operand)
 
     [<Test>]
-    let SimpleCodeGen () =
+    let AdditiveCodeGen () =
         let expr = doParse("123 + 44555")
         let gen = new CodeGenerator(expr)
         gen.Generate()
-        let assemDef = Mono.Cecil.AssemblyDefinition.ReadAssembly(System.Environment.CurrentDirectory + "\\" + gen.Config.AssemblyName.FullName + ".dll")
+        use assemDef = Mono.Cecil.AssemblyDefinition.ReadAssembly(System.Environment.CurrentDirectory + "\\" + gen.Config.AssemblyName.FullName + ".dll")
         let instructions = assemDef.MainModule.Types.ToList().Find(
             fun x -> x.FullName = "Example").Methods.ToList().Find(fun x -> x.Name = "Function1").Body.Instructions.ToList()
         assertInstruction(instructions[0], 0, OpCodes.Ldc_I4, 123)
@@ -64,6 +64,3 @@ module CodeGenTests =
         assertInstruction(instructions[3], 11, OpCodes.Box, assemDef.MainModule.ImportReference(typeof<System.Int32>))
         assertInstruction(instructions[4], 16, OpCodes.Ret, null)
         Assert.Pass()
-
-
-

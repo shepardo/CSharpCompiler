@@ -8,5 +8,8 @@
         | MINUS = 3
         | LPARENT = 4
         | RPARENT = 5
+        | TIMES = 6
+        | DIVIDE = 7
+        | MODULUS = 8
         | EOF = 255
 

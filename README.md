@@ -5,19 +5,23 @@
 
 *** Current Objectives
 
+
+12:07
+
 - Aim for an engine of expression, for all C# 1.0 operators.
-- Add support for Parentesis in expressions.
+* Add support for Parentesis in expressions.
 - Add unit tests for edge cases, including multiple operands.
 - add support for tracking location of errors
 - 
 
 
-```
-    type public INodeExpr() as this =        
-        do ()
 
-    type public OperandNode(token: Token) as this =
-        do()
+----------------------------------------------
+
+
+https://www.mono-project.com/docs/about-mono/languages/csharp/
+
+
 ```
 
 

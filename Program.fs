@@ -49,6 +49,9 @@ module main =
                 | '-' -> _tokens.Add(new Token(TokenClass.MINUS, "-"))
                 | '(' -> _tokens.Add(new Token(TokenClass.LPARENT, "("))
                 | ')' -> _tokens.Add(new Token(TokenClass.RPARENT, ")"))
+                | '*' -> _tokens.Add(new Token(TokenClass.TIMES, "*"))
+                | '/' -> _tokens.Add(new Token(TokenClass.DIVIDE, "/"))
+                | '%' -> _tokens.Add(new Token(TokenClass.MODULUS, "%"))
                 | _   -> 
                     if Char.IsDigit(ch) then
                         let sb = new StringBuilder("")
@@ -81,7 +84,6 @@ module main =
                     prev_c <- -1
                 else
                     c <- read()
-
 
         member public x.Next() : Token =
             if _current >= _tokens.Count then Scanner._tokenEof 
@@ -129,100 +131,109 @@ module main =
 
     type public Parser(sc : Scanner) as this =
         [<DefaultValue>] val mutable private _sc : Scanner
-        // TODO: is it OK to use a stack or a queue is preferred (ie for right / left associativity operators)?
-        [<DefaultValue>] val mutable private _operators : Stack<Token>
-        [<DefaultValue>] val mutable private _operands : Queue<Token>
 
         do
             this._sc <- sc
-            this._operators <- new Stack<Token>()
-            this._operands <- new Queue<Token>()
             ()
 
-
         member public x.parse() : BinaryNodeExpr =
-            this._operators.Clear()
-            this._operands.Clear()
-            this.expr()
-            this.BuildExprTree()
+            this.additive_expr()
+
         (*
-        expr 
+        additive_expr 
 	        :	(
-		        ( expr PLUS term )
-	        |	( expr MINUS term )
-	        |	(term)
+		        ( additive_expr PLUS multiplicative_expr )
+	        |	( additive_expr MINUS multiplicative_expr )
+	        |	(multiplicative_expr)
 	        ) 
 	        ;
         
-        expr -> term rest
-         rest -> 
-            PLUS term rest
-         |  MINUS term rest
-         |  <nothing>
          * *)
-        member public x.expr() : unit =
-            this.term()
-            this.rest()
+        member public x.additive_expr() : BinaryNodeExpr =
+            let mutable left_term = this.multiplicative_expr()
+            let mutable tok = this._sc.Peek()
+
+            while   tok.Class = TokenClass.PLUS ||
+                    tok.Class = TokenClass.MINUS do
+
+                let operator = this._sc.Next()
+                let right_term = this.multiplicative_expr()
+                left_term <- x.CreateBinaryExpr(operator, left_term, right_term)
+                tok <- this._sc.Peek()
+            left_term
 
         (*
-        term ->
-            simple_term
-        |   '(' expr ')'
+        multiplicative_expr ->
+            multiplicative_expr TIMES unary_expr
+            multiplicative_expr DIVSION unary_expr
+            multiplicative_expr MODULUS unary_expr
+        |   '(' additive_expr ')'
+        unary_expr ->
+            INT_NUMBER
+        |   '(' additive_expr ')'
         *)
-        member private x.term() : unit =
+        member private x.multiplicative_expr() : BinaryNodeExpr =
+            let mutable left_term = this.unary_expr()
+            let mutable tok = this._sc.Peek()
+
+            while  tok.Class = TokenClass.TIMES ||
+                tok.Class = TokenClass.DIVIDE ||
+                tok.Class = TokenClass.MODULUS do
+
+                let operator = this._sc.Next()
+                let right_term = this.unary_expr()
+                left_term <- x.CreateBinaryExpr(operator, left_term, right_term)
+                tok <- this._sc.Peek()
+            left_term
+
+        (*
+        unary_expr ->
+            simple_unary_expr
+        |   '(' additive_expr ')'
+        *)
+        member private x.unary_expr() : BinaryNodeExpr =
             let mutable tok = this._sc.Peek()
             
             if tok.Class = TokenClass.LPARENT then
                 tok <- this._sc.Next()
-                this.expr()
+                let result = this.additive_expr()
                 tok <- this._sc.Peek()
                 if tok.Class = TokenClass.RPARENT then
                     tok <- this._sc.Next()
                 else
                     // TODO: insert ')' and continue parsing
                     raise (new Exception("Expected ')'"))
+                result
             else
-                this.simple_term()
-            
+                this.simple_unary_expr()
             
         (*
-        term ->
+        simple_unary_expr ->
             INT_NUMBER
         *)
-        member private x.simple_term(): unit =
+        member private x.simple_unary_expr(): BinaryNodeExpr =
             let mutable tok = this._sc.Peek()
             // TODO: support other data types
             if tok.Class <> TokenClass.INT_NUMBER then
                 // TODO: insert a dummy token to continue parsing
                 raise (new Exception("Not a valid term"))
             tok <- this._sc.Next()
-            this._operands.Enqueue(tok)
-  
-        (*
-        rest -> 
-            PLUS term rest
-            MINUS term rest 
-        *)
-        member private x.rest((*Default false expects_rparen*) ?expects_rparen: bool) : unit =
-            let expects_parent = defaultArg expects_rparen false
-            let tok = this._sc.Peek()
-            if tok.Class = TokenClass.PLUS || tok.Class = TokenClass.MINUS then
-                this._operators.Push(this._sc.Next())
-                this.term()
-                this.rest((*None*))
+            x.CreateBinaryExprFromOperand(tok)
 
-        member private x.BuildExprTree() : BinaryNodeExpr =
-            if this._operators.Count <> 0 then
-                let result : BinaryNodeExpr = new BinaryNodeExpr()
-                result.Data <- this._operators.Pop()
-                result.Left <- this.BuildExprTree()
-                result.Right <- this.BuildExprTree()
-                result
-            else
-                let t1 : Token = this._operands.Dequeue()
-                let result : BinaryNodeExpr = new BinaryNodeExpr()
-                result.Data <- t1
-                result
+        member private x.CreateBinaryExprFromOperand(operand: Token) : BinaryNodeExpr =
+            let result : BinaryNodeExpr = new BinaryNodeExpr()
+            result.Data <- operand
+            result
+
+        member private x.CreateBinaryExpr(operator: Token, left, right: Token) : BinaryNodeExpr =
+            x.CreateBinaryExpr(operator, x.CreateBinaryExprFromOperand(left), x.CreateBinaryExprFromOperand(right))
+
+        member private x.CreateBinaryExpr(operator: Token, left, right: BinaryNodeExpr) : BinaryNodeExpr =
+            let result : BinaryNodeExpr = new BinaryNodeExpr()
+            result.Data <- operator
+            result.Left <- left
+            result.Right <- right
+            result
 
     [<AllowNullLiteral>]
     type public CodeGeneratorConfig() as this =
@@ -307,6 +318,22 @@ module main =
             if node.Right <> null then this.DoGenerate(node.Right)
             this.Visit(node)
 
+        member private x.DoGenerate2(root : BinaryNodeExpr) =
+            let stack = new Stack<BinaryNodeExpr>()
+            let mutable node = root
+            stack.Push(node)
+            while stack.Count <> 0 do
+                node <- stack.Pop()
+                if node.Left <> null then stack.Push(node.Left)
+                if node.Right <> null then stack.Push(node.Right)
+                node <- stack.Pop()
+                this.Visit(node)
+
+        member private x.DoGenerateRecursive(node : BinaryNodeExpr) =
+            if node.Left <> null then this.DoGenerate(node.Left)
+            if node.Right <> null then this.DoGenerate(node.Right)
+            this.Visit(node)
+
         member private x.Visit(node : BinaryNodeExpr) =
             let gen = this._config.ILGenerator
             match node.Data.Class with
@@ -315,6 +342,9 @@ module main =
                 gen.Emit(OpCodes.Ldc_I4, value)
             | TokenClass.MINUS -> gen.Emit(OpCodes.Sub)
             | TokenClass.PLUS -> gen.Emit(OpCodes.Add)
+            | TokenClass.DIVIDE -> gen.Emit(OpCodes.Div)
+            | TokenClass.TIMES -> gen.Emit(OpCodes.Mul)
+            | TokenClass.MODULUS -> gen.Emit(OpCodes.Rem)
             | _ -> raise (new Exception(String.Format("Unexpected node '{0}' when visiting", node.Data.Class)))
             
     [<EntryPoint>]

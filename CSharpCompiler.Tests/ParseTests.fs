@@ -21,7 +21,7 @@ module ParseTests =
         parser.parse()
 
     [<Test>]
-    let SimpleBinaryExpr () =
+    let AdditiveBinaryExpr () =
         let expr = doParse("123 + 44555")
         Assert.AreEqual(typeof<BinaryNodeExpr>, expr.GetType())
         Assert.AreEqual(TokenClass.PLUS, expr.Data.Class)
@@ -35,7 +35,7 @@ module ParseTests =
 
 
     [<Test>]
-    let SimpleBinaryExpr2 () =
+    let AdditiveBinaryExpr2 () =
         let expr = doParse("(123 + 44555) - 2")
         Assert.AreEqual(typeof<BinaryNodeExpr>, expr.GetType())
         Assert.AreEqual(TokenClass.MINUS, expr.Data.Class)

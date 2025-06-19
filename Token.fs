@@ -1,7 +1,10 @@
 ﻿namespace CSharpCompiler
 
+open System.Diagnostics
+
 //module Token =
 
+    [<DebuggerDisplay("class = {_class}, text = {_text}")>]
     [<AllowNullLiteral>]
     type public Token(tokenClass : TokenClass, text : string) as this =
         [<DefaultValue>] val mutable private _class : TokenClass
