@@ -12,6 +12,11 @@
     <None Include="README.md" />
     <Compile Include="TokenClass.fs" />
     <Compile Include="Token.fs" />
+    <Compile Include="Scanner.fs" />
+    <Compile Include="BinaryNodeExpr.fs" />
+    <Compile Include="Parser.fs" />
+    <Compile Include="CodeGeneratorConfig.fs" />
+    <Compile Include="CodeGenerator.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 </Project>
