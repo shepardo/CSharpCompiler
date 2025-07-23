@@ -27,8 +27,8 @@ open Utility
             let mutable left_term = this.multiplicative_expr()
             let mutable tok = this._sc.Peek()
 
-            while   tok.Class = TokenClass.PLUS ||
-                    tok.Class = TokenClass.MINUS do
+            while   tok.Class = TokenClass.OP_PLUS ||
+                    tok.Class = TokenClass.OP_MINUS do
 
                 let operator = this._sc.Next()
                 let right_term = this.multiplicative_expr()
@@ -50,9 +50,9 @@ open Utility
             let mutable left_term = this.unary_expr()
             let mutable tok = this._sc.Peek()
 
-            while  tok.Class = TokenClass.TIMES ||
-                tok.Class = TokenClass.DIVIDE ||
-                tok.Class = TokenClass.MODULUS do
+            while  tok.Class = TokenClass.OP_TIMES_OR_INDIRECTION ||
+                tok.Class = TokenClass.OP_DIVIDE ||
+                tok.Class = TokenClass.OP_MODULUS do
 
                 let operator = this._sc.Next()
                 let right_term = this.unary_expr()

@@ -53,32 +53,16 @@ open System.Threading
             if node.Right <> null then this.DoGenerate(node.Right)
             this.Visit(node)
 
-        member private x.DoGenerate2(root : BinaryNodeExpr) =
-            let stack = new Stack<BinaryNodeExpr>()
-            let mutable node = root
-            stack.Push(node)
-            while stack.Count <> 0 do
-                node <- stack.Pop()
-                if node.Left <> null then stack.Push(node.Left)
-                if node.Right <> null then stack.Push(node.Right)
-                node <- stack.Pop()
-                this.Visit(node)
-
-        member private x.DoGenerateRecursive(node : BinaryNodeExpr) =
-            if node.Left <> null then this.DoGenerate(node.Left)
-            if node.Right <> null then this.DoGenerate(node.Right)
-            this.Visit(node)
-
         member private x.Visit(node : BinaryNodeExpr) =
             let gen = this._config.ILGenerator
             match node.Data.Class with
             | TokenClass.INT_NUMBER ->
                 let value = Int32.Parse(node.Data.Text)
                 gen.Emit(OpCodes.Ldc_I4, value)
-            | TokenClass.MINUS -> gen.Emit(OpCodes.Sub)
-            | TokenClass.PLUS -> gen.Emit(OpCodes.Add)
-            | TokenClass.DIVIDE -> gen.Emit(OpCodes.Div)
-            | TokenClass.TIMES -> gen.Emit(OpCodes.Mul)
-            | TokenClass.MODULUS -> gen.Emit(OpCodes.Rem)
+            | TokenClass.OP_MINUS -> gen.Emit(OpCodes.Sub)
+            | TokenClass.OP_PLUS -> gen.Emit(OpCodes.Add)
+            | TokenClass.OP_DIVIDE -> gen.Emit(OpCodes.Div)
+            | TokenClass.OP_TIMES_OR_INDIRECTION -> gen.Emit(OpCodes.Mul)
+            | TokenClass.OP_MODULUS -> gen.Emit(OpCodes.Rem)
             | _ -> raise (new Exception(String.Format("Unexpected node '{0}' when visiting", node.Data.Class)))
 

@@ -27,9 +27,23 @@ module ScannerTests =
     [<Test>]
     let AdditiveBinaryExpr () =
         let tokens = doScan("123 + 44555")
-        Assert.AreEqual(TokenClass.INT_NUMBER, tokens[0].Class)
-        Assert.AreEqual("123", tokens[0].Text)
-        Assert.AreEqual(TokenClass.PLUS, tokens[1].Class)
-        Assert.AreEqual(TokenClass.INT_NUMBER, tokens[2].Class)
-        Assert.AreEqual("44555", tokens[2].Text)
+        let expected_tokens : Token list = [ 
+            new Token(TokenClass.INT_NUMBER, "123"); 
+            new Token(TokenClass.OP_PLUS, "+"); 
+            new Token(TokenClass.INT_NUMBER, "44555");
+            new Token(TokenClass.EOF, "")
+        ]
+        Assert.AreEqual(ResizeArray<Token> expected_tokens, tokens)
+        Assert.Pass()
+
+    [<Test>]    
+    let AdditiveBinaryExpr2 () =
+        let tokens = doScan("123 + 44555")
+        let expected_tokens : Token list = [ 
+            new Token(TokenClass.INT_NUMBER, "123"); 
+            new Token(TokenClass.OP_PLUS, "+"); 
+            new Token(TokenClass.INT_NUMBER, "44555");
+            new Token(TokenClass.EOF, "")
+        ]
+        Assert.AreEqual(ResizeArray<Token> expected_tokens, tokens)
         Assert.Pass()

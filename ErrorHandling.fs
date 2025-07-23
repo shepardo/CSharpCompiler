@@ -3,7 +3,8 @@
 open System.Collections.Generic
 open System.IO
 
-module ErrorHandling =
+// module ErrorHandling =
+    [<AllowNullLiteral>]
     type public ErrorLocation(line: int32, column: int32, filePath: string) as this =
         class
             [<DefaultValue>] val mutable private _line: int32
@@ -17,13 +18,23 @@ module ErrorHandling =
 
             member public x.Line
                 with get(): int32 = x._line
+                and set(value: int32) = x._line <- value
 
             member public x.Column
                 with get(): int32 = x._column
+                and set(value: int32) = x._column <- value
 
             member public x.FilePath
                 with get(): string = x._filePath
+
+            member public x.IncLine() =
+                x._line <- x._line + 1
+
+            member public x.IncColumn() =
+                x._column <- x._column + 1
         end
+
+    //type ErrorLocationNullable = ErrorLocation | null
 
     type public ErrorMessage(message : string, location: ErrorLocation) as this =
         [<DefaultValue>] val mutable private _message: string
@@ -39,6 +50,7 @@ module ErrorHandling =
             with get() : ErrorLocation = x._location
             and set(value) = x._location <- value
 
+    [<AllowNullLiteral>]
     type public ErrorManager(textWriter: TextWriter) as this =
         [<DefaultValue>] val mutable private _errorCollection: List<ErrorMessage>
         [<DefaultValue>] val mutable private _textWriter : TextWriter
@@ -63,3 +75,9 @@ module ErrorHandling =
                 this.PrintMessage(errorMessage)
                 this._textWriter.WriteLine()
             this._errorCollection.Count
+
+        member public x.GetErrorMessages: List<ErrorMessage> =
+            this._errorCollection
+
+        static member public CreateErrorMessage(message: string, line: int32, column: int32, filePath: string) =
+            new ErrorMessage(message, new ErrorLocation(line, column, filePath))

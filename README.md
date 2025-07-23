@@ -16,6 +16,12 @@
 
 
 
+
+What is the list of c# compiler error messages?
+https://gist.github.com/thomaslevesque/43e4950a65961e2194e4ce082d64bc31
+CS0255
+
+
 ----------------------------------------------
 
 
@@ -27,8 +33,11 @@ https://www.mono-project.com/docs/about-mono/languages/csharp/
 
 - Add support for more operators (*,/,%,&,^,|,&&,||,==,!=, =, +=, etc, -, ++,--,new,sizeof), 
 https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/#operator-precedence
+- Variable declaration & symbol table (name, value, type, scope (type, block (type level, arg, local var))
+- 
 
 
+pag 407 of spec, expressions definition grammar
 
 *** References
 
@@ -170,9 +179,12 @@ To know these features in detail follow our post on C# 10 features.
 *** F# Notes
 
 
+
 https://fsharp.org/
 https://fsharp.org/specs/language-spec/4.1/FSharpSpec-4.1-latest.pdf
 
+
+https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/symbol-and-operator-reference/
 
 https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/generics/
 
@@ -287,3 +299,42 @@ https://www.codeproject.com/Articles/121568/Dynamic-Type-Using-Reflection-Emit
 https://www.codeproject.com/Articles/13337/Introduction-to-Creating-Dynamic-Types-with-Reflec
 
 
+
+-----------------
+
+*** .NET Articles
+
+
+*** Span
+
+https://learn.microsoft.com/en-us/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay
+https://nishanc.medium.com/an-introduction-to-writing-high-performance-c-using-span-t-struct-b859862a84e4
+https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/
+https://learn.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines?source=recommendations
+https://ironpdf.com/blog/net-help/csharp-span/
+https://dev.to/moh_moh701/understanding-span-in-net-usage-comparisons-and-best-practices-2690
+https://okyrylchuk.dev/blog/efficient-memory-management-with-spans-in-dotnet/
+https://learn.microsoft.com/en-us/shows/on-dotnet/a-complete-dotnet-developers-guide-to-span-with-stephen-toub
+
+
+
+https://fsharpforfunandprofit.com/posts/let-use-do/
+
+
+
+TODO Integrate a linter
+https://github.com/fsprojects/FSharpLint
+https://marketplace.visualstudio.com/items?itemName=asti.fslint-vs
+https://fsprojects.github.io/FSharpLint/how-tos/rule-configuration.html#ruleList
+https://fsprojects.github.io/FSharpLint/
+
+
+https://stackoverflow.com/questions/19720845/hlint-like-tool-for-f-code
+https://github.com/duckmatt/FSharpLint
+https://github.com/fsharp/fsharp-compiler-docs
+https://hackage.haskell.org/package/hlint-1.7/src/hlint.htm
+https://github.com/ndmitchell/hlint
+https://github.com/fsprojects/fantomas
+https://github.com/scalastyle/scalastyle
+https://github.com/wartremover/wartremover
+https://mascot.x9c.fr/index.html
