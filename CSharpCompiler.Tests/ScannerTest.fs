@@ -7,7 +7,7 @@ open System.Text
 open CSharpCompiler
 open CSharpCompiler.main
 
-module ScannerTests =
+module ScannerTest =
 
     [<SetUp>]
     let Setup () =
@@ -25,7 +25,7 @@ module ScannerTests =
         tokens
 
     [<Test>]
-    let AdditiveBinaryExpr () =
+    let AdditiveBinaryExprIntegerTest () =
         let tokens = doScan("123 + 44555")
         let expected_tokens : Token list = [ 
             new Token(TokenClass.INT_NUMBER, "123"); 
@@ -37,12 +37,12 @@ module ScannerTests =
         Assert.Pass()
 
     [<Test>]    
-    let AdditiveBinaryExpr2 () =
-        let tokens = doScan("123 + 44555")
+    let AdditiveBinaryExprFloating () =
+        let tokens = doScan("123.02 + 44555e+010")
         let expected_tokens : Token list = [ 
-            new Token(TokenClass.INT_NUMBER, "123"); 
+            new Token(TokenClass.FLOAT_NUMBER, "123.02"); 
             new Token(TokenClass.OP_PLUS, "+"); 
-            new Token(TokenClass.INT_NUMBER, "44555");
+            new Token(TokenClass.FLOAT_NUMBER, "44555e+010");
             new Token(TokenClass.EOF, "")
         ]
         Assert.AreEqual(ResizeArray<Token> expected_tokens, tokens)

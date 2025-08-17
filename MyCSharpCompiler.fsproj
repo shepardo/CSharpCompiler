@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net481</TargetFramework> 
+    <TargetFramework>net48</TargetFramework> 
 
     <WarnOn>3390;$(WarnOn)</WarnOn>
   </PropertyGroup>
@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Include="ErrorHandling.fs" />
     <Compile Include="Utility.fs" />
-    <None Include="README.md" />
     <Compile Include="TokenClass.fs" />
     <Compile Include="Token.fs" />
     <Compile Include="Scanner.fs" />

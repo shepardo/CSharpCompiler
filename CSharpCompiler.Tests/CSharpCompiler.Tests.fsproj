@@ -1,29 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
 
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.5" />
+    <Compile Include="ParseTests.fs" />
+    <Compile Include="CodeGenTests.fs" />
+    <Compile Include="ExecutionTargetTests.fs" />
+    <Compile Include="ScannerTest.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="ScannerTests.fs" />
-    <Compile Include="ParseTests.fs" />
-    <Compile Include="ExecutionTargetTests.fs" />
-    <Compile Include="CodeGenTests.fs" />
-    <Compile Include="Program.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CSharpCompiler.fsproj" />
+    <ProjectReference Include="..\MyCSharpCompiler.fsproj" />
   </ItemGroup>
 
 </Project>

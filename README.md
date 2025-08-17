@@ -327,14 +327,3 @@ https://github.com/fsprojects/FSharpLint
 https://marketplace.visualstudio.com/items?itemName=asti.fslint-vs
 https://fsprojects.github.io/FSharpLint/how-tos/rule-configuration.html#ruleList
 https://fsprojects.github.io/FSharpLint/
-
-
-https://stackoverflow.com/questions/19720845/hlint-like-tool-for-f-code
-https://github.com/duckmatt/FSharpLint
-https://github.com/fsharp/fsharp-compiler-docs
-https://hackage.haskell.org/package/hlint-1.7/src/hlint.htm
-https://github.com/ndmitchell/hlint
-https://github.com/fsprojects/fantomas
-https://github.com/scalastyle/scalastyle
-https://github.com/wartremover/wartremover
-https://mascot.x9c.fr/index.html

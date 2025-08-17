@@ -169,19 +169,19 @@ open Utility
 
             // Floating point literal
             let read_exponent() : bool =
-                if Char.ToLower(!_ch) <= 'e' then
+                if Char.ToLower(!_ch) <> 'e' then
                     false
                 else
-                    sb.Append(ch) |> ignore
+                    sb.Append(!_ch) |> ignore
                     c <- read()
-                    ch <- (char)c
-                    if ch = '+' || ch = '-' then
-                        sb.Append(ch) |> ignore
+                    _ch := (char)c
+                    if !_ch = '+' || !_ch = '-' then
+                        sb.Append(!_ch) |> ignore
                         c <- read()
-                        ch <- (char)c
+                        _ch := (char)c
                         while_is_digit()
                         true
-                    else if Char.IsDigit(ch) then
+                    else if Char.IsDigit(!_ch) then
                         while_is_digit()
                         true
                     else
@@ -220,19 +220,23 @@ open Utility
                         _tokens.Add(new Token(TokenClass.FLOAT_NUMBER, sb.ToString()))
                         true
                     else
+                        // TODO: calculate right position in the file (line, column)
+                        // Error, malformed floating point literal
+                        let mutable result = sb.ToString()
+                        _tokens.Add(new Token(TokenClass.FLOAT_NUMBER, result))
+                        x.AddErrorMessage(
+                            String.Format(
+                                "Error recognizing floating point number at literal {0}, expected (digit), found: {1}",
+                                result, !_ch
+                            )
+                        )
                         false
                 else
-                    // TODO: calculate right position in the file (line, column)
-                    // Error, malformed floating point literal
-                    let mutable result = sb.ToString()
-                    _tokens.Add(new Token(TokenClass.FLOAT_NUMBER, result))
-                    x.AddErrorMessage(
-                        String.Format(
-                            "Error recognizing floating point number at literal {0}, expected (digit), found: {1}",
-                            result, ch
-                        )
-                    )
-                    false
+                    _tokens.Add(new Token(TokenClass.FLOAT_NUMBER, sb.ToString()))
+                    // its a different token
+                    prev_c <- c
+                    true
+                    
 
             // TODO: when gobling charactesr (like for char literal, must account for escape sequences & new line)
             while c <> -1 do
@@ -378,10 +382,11 @@ open Utility
                 | ':' -> _tokens.Add(new Token(TokenClass.OP_CONDITONAL_TERNARY_CLOSE, ":"))
                 | '.' -> 
                     c <- read()
-                    ch <- (char)c
-                    sb <- new StringBuilder("")
-                    if Char.IsDigit(ch) then
+                    _ch := (char)c
+                    if Char.IsDigit(!_ch) then
                         // can also be a floating point literal
+                        sb <- new StringBuilder("")
+                        sb.Append('.') |> ignore
                         read_floating_point_after_dot() |> ignore
                     else
                         _tokens.Add(new Token(TokenClass.DOT, "."))
@@ -398,7 +403,7 @@ open Utility
                 *)
 
                 | _   ->
-                    let mutable is_hexadecimal = false            
+                    let mutable is_hexadecimal = false       
                     _ch := (char)c
                     sb <- new StringBuilder("")
 
@@ -420,6 +425,8 @@ open Utility
                         //ch <- (char)c
                         _ch := (char)c
                         if Char.ToLower(!_ch) = 'x' then
+                            sb.Append('0') |> ignore
+                            sb.Append(!_ch) |> ignore
                             is_hexadecimal <- true
                             c <- read()
                             //ch <- (char)c
@@ -438,8 +445,13 @@ open Utility
                             *)
                             // Since the correct parsing (Int64.TryParse, UInt64.TryParse, etc depends upon the suffix, 
                             // the parsing is deferred to the parsing phase).
+                            // TODO: How does the parser recognize what kind of literal is?
                             let mutable result = sb.ToString()
                             _tokens.Add(new Token(TokenClass.INT_NUMBER, result))
+                        else
+                            prev_c <- c
+                            c <- (int)'0'
+                            _ch := (char)c
                     if not is_hexadecimal then
                         if Char.IsDigit(!_ch) then
                             let mutable is_floating_point = false
@@ -447,16 +459,57 @@ open Utility
                             c <- !_c
                             _ch := (char)c
                             if !_ch = '.' then
+                                is_floating_point <- true
+                                sb.Append(!_ch) |> ignore
                                 c <- read()
                                 _ch := (char)c
                                 read_floating_point_after_dot() |> ignore
                                 ()
                             if not (Char.IsDigit(!_ch)) then
                                 prev_c <- c
-                            _tokens.Add(new Token(TokenClass.INT_NUMBER, sb.ToString()))
+                            if not is_floating_point then
+                                _tokens.Add(new Token(TokenClass.INT_NUMBER, sb.ToString()))
 
                         else if Char.IsLetter(!_ch) || !_ch = '_' || !_ch = '@' then
+                        (**
+                        identifier:
+                            available-identifier
+                            @ identifier-or-keyword
+                        available-identifier:
+                            An identifier-or-keyword that is not a keyword
+                        identifier-or-keyword:
+                            identifier-start-character identifier-part-charactersopt
+                        identifier-start-character:
+                            letter-character
+                            _ (the underscore character U+005F)
+                        identifier-part-characters:
+                            identifier-part-character
+                            identifier-part-characters identifier-part-character
+                        identifier-part-character:
+                            letter-character
+                            decimal-digit-character
+                            connecting-character
+                            combining-character
+                            formatting-character
+                        letter-character:
+                            A Unicode character of classes Lu, Ll, Lt, Lm, Lo, or Nl
+                            A unicode-escape-sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl
+                        combining-character:
+                            A Unicode character of classes Mn or Mc
+                            A unicode-escape-sequence representing a character of classes Mn or Mc
+                        decimal-digit-character:
+                            A Unicode character of the class Nd
+                            A unicode-escape-sequence representing a character of the class Nd
+                        connecting-character:
+                            A Unicode character of the class Pc
+                            A unicode-escape-sequence representing a character of the class Pc
+                        formatting-character:
+                            A Unicode character of the class Cf
+                            A unicode-escape-sequence representing a character of the class Cf
+
+                        *)
                             // TODO: identifier
+                            let category = Char.GetUnicodeCategory(!_ch)
                             // TODO: is UNICODE correctly handled?
                             // TODO: also check if identifier is keyword after converting it to lower case
                             ()
